@@ -26,7 +26,7 @@
     </head>
     <body>
         <div id="mainfestSelection" />
-            <select id="mpdSelector" name="mpdSelector" onchange="onMPDSelected(event)">
+            <select id="mpdSelector" name="mpdSelector">
                 <option value="http://wowza.streamroot.io/testelias/mp4:sintel.mp4/manifest.mpd">Sintel 14:48(time based segment template | 1 video & 1 audio)</option>
                 <option value="http://media.streamroot.io/dash/examples/snow15/snowboard1_720p_dash.mpd">Snowboard 1:30(segment base | 3 video & 1 audio)</option>
                 <option value="http://dash.edgesuite.net/envivio/Envivio-dash2/manifest.mpd">Envivio 3:13(number based segment template | 9 video & 1 audio)</option>
@@ -37,49 +37,52 @@
         </div>
 
         <script>
-            function onMPDSelected(event) {
-                var mpdUrl = document.getElementById("mpdSelector").value;
-                window.location = window.location.origin + window.location.pathname + "?mpd=" + encodeURIComponent(mpdUrl);
-            }
-
-            function getURLParams(url) {
-                if (!url) {
-                    return {};
+            (function() {
+                function onMPDSelected(event) {
+                    var mpdUrl = document.getElementById("mpdSelector").value;
+                    window.location = window.location.origin + window.location.pathname + "?mpd=" + encodeURIComponent(mpdUrl);
                 }
 
-                var search = url.substring(1); //removing '?'
-                var paramValueList = search.split("&");
-                var params = {};
-                paramValueList.forEach(function(entry){
-                    var paramValue = entry.split("=");
-                    if (entry) {
-                        params[paramValue[0]] = decodeURIComponent(paramValue[1]);
+                function getURLParams(url) {
+                    if (!url) {
+                        return {};
                     }
-                });
 
-                return params;
-            }
+                    var search = url.substring(1); //removing '?'
+                    var paramValueList = search.split("&");
+                    var params = {};
+                    paramValueList.forEach(function(entry){
+                        var paramValue = entry.split("=");
+                        if (entry) {
+                            params[paramValue[0]] = decodeURIComponent(paramValue[1]);
+                        }
+                    });
 
-            var mpdSelector = document.getElementById("mpdSelector");
-            var url = getURLParams(document.location.search)["mpd"]
-                        || mpdSelector.value
-                        || "http://wowza-prod.cloudapp.net:1935/testelias/mp4:sintel.mp4/manifest.mpd";
-            mpdSelector.value = url;
+                    return params;
+                }
 
-            var options = {
-                html5: {
-                    streamroot: {
-                        p2pConfig: {
-                            streamrootKey: "ry-tguzre2t",
-                            debug: true
+                var mpdSelector = document.getElementById("mpdSelector");
+                mpdSelector.onchange = onMPDSelected;
+
+                var url = getURLParams(document.location.search)["mpd"]
+                            || mpdSelector.value
+                            || "http://wowza-prod.cloudapp.net:1935/testelias/mp4:sintel.mp4/manifest.mpd";
+                mpdSelector.value = url;
+
+                var options = {
+                    html5: {
+                        streamroot: {
+                            p2pConfig: {
+                                streamrootKey: "ry-tguzre2t",
+                                debug: true
+                            }
                         }
                     }
-                }
-            };
+                };
 
-            var player = videojs('video_element', options);
-            player.src(url);
-
+                var player = videojs('video_element', options);
+                player.src(url);
+            })();
         </script>
     </body>
 </html>
