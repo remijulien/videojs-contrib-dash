@@ -1,8 +1,9 @@
 <html>
+    <title>Video.js with MPEG-DASH playback support through videojs-contrib-dash with Streamroot P2P</title>
     <head>
 
         <!-- dash.js -->
-        <script src="http://dashif.org/reference/players/javascript/nightly/dash.js/dist/dash.all.debug.js"></script>
+        <script src="http://dashif.org/reference/players/javascript/v2.1.0/dist/dash.all.debug.js"></script>
 
         <!-- video.js -->
         <link href="//vjs.zencdn.net/5.8/video-js.min.css" rel="stylesheet">
@@ -23,13 +24,15 @@
         <script src="http://cdnjs.cloudflare.com/ajax/libs/rickshaw/1.4.6/rickshaw.min.js"> </script>
         <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/rickshaw/1.4.6/rickshaw.min.css">
         <script src="http://cdnjs.cloudflare.com/ajax/libs/d3/3.4.9/d3.min.js"> </script>
+
     </head>
     <body>
         <div id="mainfestSelection" />
             <select id="mpdSelector" name="mpdSelector">
-                <option value="http://wowza.streamroot.io/testelias/mp4:sintel.mp4/manifest.mpd">Sintel 14:48(time based segment template | 1 video & 1 audio)</option>
-                <option value="http://media.streamroot.io/dash/examples/snow15/snowboard1_720p_dash.mpd">Snowboard 1:30(segment base | 3 video & 1 audio)</option>
-                <option value="http://dash.edgesuite.net/envivio/Envivio-dash2/manifest.mpd">Envivio 3:13(number based segment template | 9 video & 1 audio)</option>
+                <option value="http://wowza.streamroot.io/vodOriginSite/tears_of_steel720p.mp4/manifest.mpd">ToS (VoD, 1 video)</option>
+                <option value="http://wowza.streamroot.io/liveorigin/stream4/manifest.mpd">ToS (Live DVR, 1 video)</option>
+                <option value="http://wowza.streamroot.io/liveorigin/Sample-live.smil/manifest.mpd">Sintel (Live DVR, 3 video)</option>
+                <option value="http://wowza.streamroot.io/vodOriginSite/Sample-vod.smil/manifest.mpd">Sintel (VoD, 3 video)</option>
             </select>
         </div>
         <div>
@@ -64,9 +67,7 @@
                 var mpdSelector = document.getElementById("mpdSelector");
                 mpdSelector.onchange = onMPDSelected;
 
-                var url = getURLParams(document.location.search)["mpd"]
-                            || mpdSelector.value
-                            || "http://wowza.streamroot.io/testelias/mp4:sintel.mp4/manifest.mpd";
+                var url = getURLParams(document.location.search)["mpd"] || mpdSelector.value;
                 mpdSelector.value = url;
 
                 var options = {
